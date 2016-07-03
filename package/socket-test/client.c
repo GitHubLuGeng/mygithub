@@ -63,7 +63,8 @@ int main(int argc, char **argv)
  
     char file_name[FILE_NAME_MAX_SIZE+1];
     bzero(file_name, FILE_NAME_MAX_SIZE+1);
-    printf("Please Input File Name On Server:\t");
+    printf("Please Input File Name for send:\n");
+	printf("send path:");
     scanf("%s", file_name);
      
     char buffer[BUFFER_SIZE];
@@ -71,36 +72,42 @@ int main(int argc, char **argv)
     strncpy(buffer, file_name, strlen(file_name)>BUFFER_SIZE?BUFFER_SIZE:strlen(file_name));
     //向服务器发送buffer中的数据
     send(client_socket,buffer,BUFFER_SIZE,0);
- 
 //    int fp = open(file_name, O_WRONLY|O_CREAT);
 //    if( fp < 0 )
-    FILE * fp = fopen(file_name,"w");
+    char file_name2[FILE_NAME_MAX_SIZE+1];
+    bzero(file_name2, FILE_NAME_MAX_SIZE+1);
+    printf("Please Input File Name for recv:\n");
+	printf("recv path:");
+    scanf("%s", file_name2);
+    FILE * fp = fopen(file_name2,"w");
     if(NULL == fp )
     {
-        printf("File:\t%s Can Not Open To Write\n", file_name);
+        printf("File: %s Can Not Open To Write\n", file_name2);
         exit(1);
     }
      
     //从服务器接收数据到buffer中
     bzero(buffer,BUFFER_SIZE);
     int length = 0;
-    while( length = recv(client_socket,buffer,BUFFER_SIZE,0))
+    while((length = recv(client_socket,buffer,BUFFER_SIZE,0))!=0)
     {
         if(length < 0)
         {
             printf("Recieve Data From Server %s Failed!\n", argv[1]);
             break;
         }
+        else
+            printf("client recv:%s\n",buffer);
 //        int write_length = write(fp, buffer,length);
         int write_length = fwrite(buffer,sizeof(char),length,fp);
         if (write_length<length)
         {
-            printf("File:\t%s Write Failed\n", file_name);
+            printf("File: %s Write Failed\n", file_name);
             break;
         }
         bzero(buffer,BUFFER_SIZE);    
     }
-    printf("Recieve File:\t %s From Server[%s] Finished\n",file_name, argv[1]);
+    printf("Recieve File: %s From Server[%s] Finished\n",file_name, argv[1]);
      
     close(fp);
     //关闭socket

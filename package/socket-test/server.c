@@ -30,12 +30,13 @@ int main(int argc, char **argv)
     {
         printf("Create Socket Failed!");
         exit(1);
-    }else
-	{ 
-   		int opt =1;
-   		setsockopt(server_socket,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
-	}
-     
+    }
+    else
+    { 
+        int opt =1;
+        setsockopt(server_socket,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
+    }
+    
     //把socket和socket地址结构联系起来
     if( bind(server_socket,(struct sockaddr*)&server_addr,sizeof(server_addr)))
     {
@@ -66,6 +67,8 @@ int main(int argc, char **argv)
             printf("Server Accept Failed!\n");
             break;
         }
+        else
+            printf("\nServer Accept successful!\n");
          
         char buffer[BUFFER_SIZE];
         bzero(buffer, BUFFER_SIZE);
@@ -80,31 +83,31 @@ int main(int argc, char **argv)
         strncpy(file_name, buffer, strlen(buffer)>FILE_NAME_MAX_SIZE?FILE_NAME_MAX_SIZE:strlen(buffer));
 //        int fp = open(file_name, O_RDONLY);
 //        if( fp < 0 )
-        printf("%s\n",file_name);
+        printf("File name for send:%s\n",file_name);
         FILE * fp = fopen(file_name,"r");
         if(NULL == fp )
         {
-            printf("File:\t%s Not Found\n", file_name);
+            printf("File: %s Not Found\n", file_name);
         }
         else
         {
             bzero(buffer, BUFFER_SIZE);
             int file_block_length = 0;
 //            while( (file_block_length = read(fp,buffer,BUFFER_SIZE))>0)
-            while( (file_block_length = fread(buffer,sizeof(char),BUFFER_SIZE,fp))>0)
+            while((file_block_length = fread(buffer,sizeof(char),BUFFER_SIZE,fp))>0)
             {
                 printf("file_block_length = %d\n",file_block_length);
                 //发送buffer中的字符串到new_server_socket,实际是给客户端
                 if(send(new_server_socket,buffer,file_block_length,0)<0)
                 {
-                    printf("Send File:\t%s Failed\n", file_name);
+                    printf("Send File: %s Failed\n", file_name);
                     break;
                 }
                 bzero(buffer, BUFFER_SIZE);
             }
 //            close(fp);
             fclose(fp);
-            printf("File:\t%s Transfer Finished\n",file_name);
+            printf("File: %s Transfer Finished\n",file_name);
         }
         //关闭与客户端的连接
         close(new_server_socket);
