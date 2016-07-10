@@ -1,0 +1,21 @@
+This just a test module for driver.
+
+1.sudo -i 
+2.make
+3.insmod hello_proc.ko
+4.lsmod |grep hello_proc
+5.rmmod hello_proc
+6.lsmod |grep hello_proc
+7.tail /var/log/kern.log
+8.insmod world_proc.ko
+9.lsmod |grep world_proc
+11.rmmod world_proc
+12.lsmod |grep world_proc
+13.tail /var/log/kern.log
+14.insmod read_write_proc.ko
+15.lsmod |grep read_write_proc
+16.rmmod read_write_proc
+17.lsmod |grep read_write_proc
+18.tail /var/log/kern.log
+19.cat /proc/abc_proc
+20.echo test > /proc/abc_proc
