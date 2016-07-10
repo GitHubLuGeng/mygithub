@@ -1,0 +1,9 @@
+This just a test module for driver.
+
+1.sudo -i 
+2.make
+3.insmod hello.ko
+4.lsmod |grep hello
+5.rmmod hello
+6.lsmod |grep hello
+7.tail /var/log/kern.log
