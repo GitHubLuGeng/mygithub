@@ -1,0 +1,11 @@
+This just a test module for driver.
+
+1.sudo -i 
+2.make
+3.insmod netlink_driver.ko
+4.lsmod |grep netlink_driver
+5.rmmod netlink_driver
+6.lsmod |grep netlink_driver
+7.tail /var/log/kern.log
+8../netlink_app
+9.tail /var/log/knern.log (dmesg|tail)
